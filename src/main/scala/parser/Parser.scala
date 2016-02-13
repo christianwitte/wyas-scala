@@ -11,10 +11,16 @@ object Parser {
 
     def escapeChar = for {
         _ ← Atto.char('\\')
-        x ← oneOf("\"")
-    } yield x
+        x ← oneOf("\"\\nrt")
+    } yield x match {
+        case '\"' ⇒ '\"'
+        case '\\' ⇒ '\\'
+        case 'n' ⇒ '\n'
+        case 'r' ⇒ '\r'
+        case 't' ⇒ '\t'
+    }
 
-  def r5rs = escapeChar | noneOf("\"")
+    def r5rs = escapeChar | noneOf("\"\\\n\r\t")
 
     def parseString: Parser[LispVal] = for {
         _ ← Atto.char('"')
