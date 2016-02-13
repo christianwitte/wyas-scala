@@ -24,3 +24,10 @@ object LispVal {
     }
 
 }
+
+object NumericType {
+  case object BINARY
+  case object OCTAL
+  case object HEXADECIMAL
+  case object DECIMAL
+}
