@@ -2,15 +2,23 @@ package parser
 
 import atto._
 import Atto._
+import LispVal._
 import scalaz._
 import Scalaz._
 
 object Parser {
     def symbol = oneOf("!#$%&|*+-/:<=>?@^_~")
 
+    def escapeChar = for {
+        _ ← Atto.char('\\')
+        x ← oneOf("\"")
+    } yield x
+
+  def r5rs = escapeChar | noneOf("\"")
+
     def parseString: Parser[LispVal] = for {
         _ ← Atto.char('"')
-        x ← many(noneOf("\""))
+        x ← many(r5rs)
         _ ← Atto.char('"')
     } yield (StringLV(x.mkString))
 
@@ -32,7 +40,7 @@ object Parser {
     def readExpr(expr: String): String = {
         parseExpr.parseOnly(expr).either match {
             case -\/(l) ⇒ "No match: " ++ l
-            case \/-(v) ⇒ "Found: " ++ v.toString
+            case \/-(v) ⇒ "Found: " ++ v.shows
         }
     }
 

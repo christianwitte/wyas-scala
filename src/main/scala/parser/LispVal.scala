@@ -16,10 +16,10 @@ case class BoolLV(b: Boolean) extends LispVal
 object LispVal {
   implicit def LispValShow: Show[LispVal] = new Show[LispVal] {
     override def show(lv: LispVal) = lv match {
-      case Atom(a) => a
-      case NumberLV(n) => n.toString()
-      case StringLV(s) => s
-      case BoolLV(b) => b.show
+      case Atom(a) => a ++ "(Atom)"
+      case NumberLV(n) => n.toString() ++ "(Number)"
+      case StringLV(s) => s ++ "(String)"
+      case BoolLV(b) => b.show ++ "(Bool)"
     }
   }
 
